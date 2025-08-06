@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* 👇 Pega el código que te di justo aquí 👇 */
+
+/* Oculta las flechas en navegadores como Chrome, Safari, Edge */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Oculta las flechas en Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Pega esto en tu archivo index.css */
+
+/* Oculta la barra de scroll y la mantiene funcional */
+.no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari y Opera */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;  /* Firefox */
+}
