@@ -125,7 +125,7 @@ function MenuView({ menu, recommendation }) {
       if (!selectedCategory) {
         return <p className="text-center text-gray-500 py-10">Selecciona una categoría.</p>;
       }
-      const categoryProducts = menu.products.filter(p => p.categoryId === selectedCategory);
+      const categoryProducts = menu.products.filter(p => p.category_id === selectedCategory);
       return (
         <div className="grid grid-cols-1 gap-4">
           {categoryProducts.map(product => (

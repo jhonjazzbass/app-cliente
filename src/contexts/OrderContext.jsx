@@ -18,13 +18,13 @@ export const OrderProvider = ({ children, restaurantId, tableId }) => {
     if (!tableId) return;
     setIsInitializing(true);
     try {
-      const { data: existingOrder, error } = await supabase
-        .from('orders')
-        .select('*') // Pedimos todos los datos de una vez
-        .eq('table_id', tableId)
-        .in('status', ['ordering', 'received', 'ready_for_pickup', 'served', 'bill_requested', 'waiting_for_pos', 'cash_payment_pending']) // Buscamos cualquier pedido que no esté 'paid'
-        .limit(1)
-        .single();
+      // Código corregido y más robusto
+const { data: existingOrder, error } = await supabase
+  .from('orders')
+  .select('*')
+  .eq('table_id', tableId)
+  .in('status', ['ordering', 'received', 'ready_for_pickup', 'served', 'bill_requested', 'waiting_for_pos', 'cash_payment_pending'])
+  .maybeSingle(); // <-- CAMBIO CLAVE
 
       if (error && error.code !== 'PGRST116') { // Ignoramos el error "No rows found"
         throw error;
