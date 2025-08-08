@@ -13,19 +13,9 @@ export const OrderProvider = ({ children, restaurantId, tableId }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
 
- // Dentro de src/contexts/OrderContext.jsx
-
-const initializeOrder = useCallback(async () => {
-  // 👇 AÑADE ESTAS LÍNEAS PARA DEPURAR
-  console.log('--- DEBUGGING OrderContext ---');
-  console.log('El ID de la mesa que se usará para la consulta es:', tableId);
-
-  if (!tableId) {
-    console.error('ERROR FATAL: El tableId es nulo o indefinido. La consulta no se puede ejecutar.');
-    setIsInitializing(false);
-    return; // Detenemos la ejecución si no hay ID
-  }
-  // --- FIN DEL DEBUGGING ---
+  // --- LÓGICA DE INICIALIZACIÓN MEJORADA (de 'copia.dart') ---
+  const initializeOrder = useCallback(async () => {
+    if (!tableId) return;
     setIsInitializing(true);
     try {
       // Código corregido y más robusto
@@ -33,7 +23,7 @@ const { data: existingOrder, error } = await supabase
   .from('orders')
   .select('*')
   .eq('table_id', tableId)
-  .in('status', ['ordering', 'received', 'ready_for_pickup', 'served', 'bill_requested', 'waiting_for_pos', 'cash_payment_pending'])
+  .in('order_status', ['ordering', 'received', 'ready_for_pickup', 'served', 'bill_requested', 'waiting_for_pos', 'cash_payment_pending'])
   .maybeSingle(); // <-- CAMBIO CLAVE
 
       if (error && error.code !== 'PGRST116') { // Ignoramos el error "No rows found"
