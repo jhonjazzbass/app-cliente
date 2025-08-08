@@ -12,12 +12,20 @@ import CartButton from './components/features/CartButton';
 import CartSheet from './components/features/CartSheet';
 import './index.css';
 
-// --- Leemos los parámetros de la URL con los nombres correctos ---
+// --- 1. LEEMOS LOS PARÁMETROS DE LA URL EN LUGAR DE USAR CONSTANTES ---
 const urlParams = new URLSearchParams(window.location.search);
-const restaurantId = urlParams.get('restaurantId'); // Corregido de 'restauranteId'
-const tableId = urlParams.get('tableId');
+const restaurantIdFromUrl = urlParams.get('restauranteId');
+const tableIdFromUrl = urlParams.get('tableId');
 
+
+// --- 2. ELIMINAMOS LAS CONSTANTES FIJAS ---
+// const RESTAURANT_ID = '...';
+// const TABLE_ID = '...';
+
+
+// --- 3. MODIFICAMOS APPCONTENT PARA QUE RECIBA LOS IDs ---
 function AppContent({ restaurantId, tableId }) {
+  // --- 4. USAMOS LOS IDs RECIBIDOS PARA INICIALIZAR LOS HOOKS ---
   const { menu, tableData, recommendation, loading, error } = useMenu(restaurantId, tableId);
   const { activeOrderData } = useOrder();
   
@@ -55,7 +63,6 @@ function AppContent({ restaurantId, tableId }) {
     return <div className="text-center text-red-400 p-8">{error}</div>;
   }
   if (!menu || !tableData) {
-    // Este mensaje se mostrará mientras se inicializa el pedido
     return <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">Inicializando...</div>;
   }
 
@@ -94,6 +101,7 @@ function AppContent({ restaurantId, tableId }) {
           <CartSheet 
             isOpen={isCartOpen} 
             onClose={() => setIsCartOpen(false)}
+            // --- 5. PASAMOS LOS IDs DINÁMICOS AL CARTSHEET ---
             restaurantId={restaurantId}
             tableId={tableId}
           />
@@ -104,8 +112,9 @@ function AppContent({ restaurantId, tableId }) {
 }
 
 function App() {
-  // La validación ahora usa las variables corregidas
-  if (!restaurantId || !tableId) {
+  // --- 6. AÑADIMOS UNA VALIDACIÓN IMPORTANTE ---
+  // Si la URL no contiene los IDs necesarios, mostramos un error claro.
+  if (!restaurantIdFromUrl || !tableIdFromUrl) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white text-center p-4">
         <h1 className="text-3xl font-bold text-red-500 mb-4">Error de Acceso</h1>
@@ -115,11 +124,11 @@ function App() {
     );
   }
 
-  // Pasamos los IDs corregidos a toda la aplicación
+  // --- 7. PASAMOS LOS IDs DE LA URL A TODA LA APLICACIÓN ---
   return (
-    <OrderProvider restaurantId={restaurantId} tableId={tableId}>
+    <OrderProvider restaurantId={restaurantIdFromUrl} tableId={tableIdFromUrl}>
       <CartProvider>
-        <AppContent restaurantId={restaurantId} tableId={tableId} />
+        <AppContent restaurantId={restaurantIdFromUrl} tableId={tableIdFromUrl} />
       </CartProvider>
     </OrderProvider>
   );
